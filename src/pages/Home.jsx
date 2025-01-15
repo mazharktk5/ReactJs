@@ -1,13 +1,14 @@
 import React from 'react';
-import Hero from '../components/Hero'; // Adjust the path based on where you have saved Hero.js
+import Hero from '../components/Hero';
+import FlashSection from '../components/FlashSection'; 
+ 
 
 const Home = () => {
   return (
     <div>
       
       <Hero />
-
-     
+      <FlashSection/>
      
     </div>
   );

@@ -5,9 +5,9 @@ import image from '../assets/images/hero/heroimage.png';
 const Hero = () => {
   return (
     <section
-      className="hero flex justify-around items-center absolute bg-black bg-cover bg-no-repeat border-2 top-[160px] left-[128px] h-[349px] w-[1177px]"
+      className="hero flex justify-center items-center ml-40 mt-7   bg-black bg-cover bg-no-repeat border-2 top-[160px] left-[128px] h-[349px] w-[1177px]"
     >
-      {/* Text Content */}
+      
       <div className="text-white pl-10 flex flex-col space-y-4 mb-7">
         <div className="flex flex-row items-center">
           <img src={logo} alt="Logo" className="w-[40px] h-[49px] ml-4" />

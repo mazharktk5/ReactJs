@@ -1,14 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import heartIcon from '../assets/images/Wishlist.png';
 import cartIcon from '../assets/images/Cart.png';
 import searchIcon from '../assets/images/search.png';
-
-
+import { CartContext } from '../components/CartContext';
 
 const Navbar = () => {
+  const { cart } = useContext(CartContext);
+
   return (
-    <nav className="flex items-center justify-around p-4 bg-white shadow-md">
+    <nav className="flex items-center justify-around p-4 bg-white shadow-md sticky top-0">
       <div className="text-xl font-bold">
         <Link to="/">Noman Electronics</Link>
       </div>
@@ -23,7 +24,7 @@ const Navbar = () => {
           <input
             type="text"
             placeholder="What are you looking for?"
-            className="pl-4 pr-10 py-2 border rounded-md shadow-sm focus:outline-none "
+            className="pl-4 pr-10 py-2 border rounded-md shadow-sm focus:outline-none"
           />
           <img
             src={searchIcon}
@@ -36,11 +37,18 @@ const Navbar = () => {
           alt="Wishlist"
           className="w-6 h-6 text-gray-600 hover:text-purple-600 cursor-pointer"
         />
-        <img
-          src={cartIcon}
-          alt="Cart"
-          className="w-6 h-6 text-gray-600 hover:text-purple-600 cursor-pointer"
-        />
+        <Link to="/cart" className="relative">
+          <img
+            src={cartIcon}
+            alt="Cart"
+            className="w-6 h-6 text-gray-600 hover:text-purple-600 cursor-pointer"
+          />
+          {cart.length > 0 && (
+            <span className="absolute top-0 right-0 bg-red-600 text-white text-xs rounded-full px-1">
+              {cart.length}
+            </span>
+          )}
+        </Link>
       </div>
     </nav>
   );

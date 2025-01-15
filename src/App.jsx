@@ -1,25 +1,24 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { CartProvider } from './components/CartContext';
 import Navbar from './components/Navbar';
-import Home from './pages/Home'; // Assume Home component is inside the pages folder
-// import ProductDetail from './pages/ProductDetail'; // Similarly, ProductDetail component
-// import SignUp from './pages/SignUp'; // Similarly, SignUp component
-// import Contact from './pages/Contact'; // Similarly, Contact component
-// import About from './pages/About'; // Similarly, About component
+import Home from './pages/Home';
+import AllProducts from './components/AllProducts';
+import CartPage from './pages/Cart';  // Import the CartPage
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Navbar />
-    
-      <Routes>
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/product/:id" element={<ProductDetail />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/about" element={<About />} /> */}
-      </Routes>
-    </Router>
+    <CartProvider>
+      <Router>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/all-products" element={<AllProducts />} />
+          <Route path="/cart" element={<CartPage />} />  // Add CartPage route
+        </Routes>
+      </Router>
+    </CartProvider>
   );
-}
+};
 
 export default App;
