@@ -1,3 +1,4 @@
+// CartContext.jsx
 import React, { createContext, useState } from 'react';
 
 export const CartContext = createContext();
@@ -9,10 +10,11 @@ const CartProvider = ({ children }) => {
   const addToCart = (product) => {
     const existingProduct = cart.find((item) => item.id === product.id);
     if (existingProduct) {
-        alert("already exist")
-        } else {
-    setCart((prevCart) => [...prevCart, { ...product, quantity: 1 }]);
-  }};
+      alert("aAlready in the cart")
+    } else {
+      setCart((prevCart) => [...prevCart, { ...product, quantity: 1 }]);
+    }
+  };
 
   // Remove product from cart
   const removeFromCart = (productId) => {
@@ -29,7 +31,6 @@ const CartProvider = ({ children }) => {
       );
     });
   };
-  
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, updateQuantity }}>
@@ -38,4 +39,4 @@ const CartProvider = ({ children }) => {
   );
 };
 
-export default CartProvider;
+export default CartProvider;  // This is the default export

@@ -11,7 +11,7 @@ const Navbar = () => {
   return (
     <nav className="flex items-center justify-around p-4 bg-white shadow-md sticky top-0">
       <div className="text-xl font-bold">
-        <Link to="/">Noman Electronics</Link>
+        <Link to="/">Mazhar Electronics</Link>
       </div>
       <div className="flex space-x-8">
         <Link to="/" className="hover:underline hover:font-semibold">Home</Link>
@@ -49,6 +49,9 @@ const Navbar = () => {
             </span>
           )}
         </Link>
+        <div>
+        <Link to="/profile"> Profile</Link>
+        </div>
       </div>
     </nav>
   );

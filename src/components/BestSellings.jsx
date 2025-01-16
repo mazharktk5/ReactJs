@@ -1,21 +1,21 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../components/CartContext'; // Adjust the import path based on your folder structure
+import { CartContext } from '../components/CartContext'; 
 
-const FlashSection = () => {
-  const { addToCart } = useContext(CartContext); // Access addToCart from CartContext
+const BestSellings = () => {
+  const { addToCart } = useContext(CartContext); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState();
+  const [notification, setNotification] = useState(null);
 
   // Fetch products data from the fake API
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')  // Replace with your actual API URL
+    fetch('https://fakestoreapi.com/products')  
       .then(response => response.json())
       .then(data => {
-        console.log(data);  // Log the data to check its structure
+        console.log(data);  
         if (Array.isArray(data)) {
-          setProducts(data);  // Set products data if it's an array
+          setProducts(data);  
         } else {
           console.error('Invalid data format:', data);
         }
@@ -24,28 +24,30 @@ const FlashSection = () => {
         console.error('Error fetching products:', error);
       })
       .finally(() => {
-        setLoading(false);  // Set loading to false once the request is finished
+        setLoading(false);  
       });
   }, []);
 
-  // Handle adding a product to the cart
+ 
   const handleAddToCart = (product) => {
-     setNotifications(`${product.title} added to cart`);
-     setTimeout(() => setNotifications(null),3000),
-    addToCart(product);  // Call addToCart from CartContext to add the product to the cart
+    setNotification(`${product.title} added to cart`);
+    setTimeout(() => setNotification(null), 3000);
+    
+    addToCart(product);  
   };
 
   return (
     <>
       <section className="flash-section p-8 bg-gray-100 mt-5">
-        <h2 className="text-2xl font-bold mb-6">Flash Sales</h2>
+        <h2 className="text-2xl font-bold mb-6">Best Sellings products</h2>
+        {notification && <div className="notification   bg-green-100 text-green-700 p-2 rounded-md mb-4">{notification}</div>}
         <div className="product-container grid grid-cols-4 gap-4">
           {loading ? (
-            <p>Loading products...</p> // Display loading message
+            <p>Loading products...</p> 
           ) : (
             Array.isArray(products) && products.length > 0 ? (
-              products.slice(0, 4).map((product) => (
-                <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md ">
+              products.slice(10, 14).map((product) => (
+                <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md">
                   <img
                     src={product.image}
                     alt={product.title}
@@ -59,7 +61,7 @@ const FlashSection = () => {
                     <span className="ml-2 text-sm text-gray-500">({product.rating.rate})</span>
                   </div>
                   <button
-                    className="mt-7 bg-black text-white py-2 px-4 rounded-lg hover:bg-slate-500 focus:outline-none"
+                    className="mt-4 bg-black text-white py-2 px-4 rounded-lg hover:bg-slate-600 focus:outline-none"
                     onClick={() => handleAddToCart(product)} // Call handleAddToCart
                   >
                     Add to Cart
@@ -67,21 +69,22 @@ const FlashSection = () => {
                 </div>
               ))
             ) : (
-              <p>No products available.</p> // Fallback message if no products are fetched
+              <p>No products available.</p> 
             )
           )}
         </div>
-      </section>
-
-      <div className="flex justify-center mt-5 mb-4">
-        <Link to="/all-products">
-          <button className="bg-red-500 text-white py-2 px-4 rounded-lg hover hover:bg-red-600   focus:outline-none">
-            View All Products
+        <div className="flex justify-center mt-5 mb-4">
+        <Link to="/all-bestsellings">
+          <button className="bg-red-500 text-white py-2 px-4 rounded-lg  hover:bg-red-600 hover focus:outline-none">
+            View All 
           </button>
         </Link>
       </div>
+      </section>
+
+      
     </>
   );
 };
 
-export default FlashSection;
+export default BestSellings;
