@@ -9,7 +9,7 @@ const Navbar = () => {
   const { cart } = useContext(CartContext);
 
   return (
-    <nav className="flex items-center justify-around p-4 bg-white shadow-md sticky top-0">
+    <nav className="flex items-center justify-around p-4 bg-white shadow-md sticky top-0 z-10">
       <div className="text-xl font-bold">
         <Link to="/">Mazhar Electronics</Link>
       </div>

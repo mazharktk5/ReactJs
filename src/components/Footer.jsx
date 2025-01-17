@@ -10,7 +10,7 @@ const Footer = ()=>{
                 <p>Subscribe</p>
                 <p>Get !0% off on your <br />
                 first order</p>
-                <input className="p-1" type="text" placeholder="order now" />
+                
             </div>
             <div  className="flex flex-col gap-2">
                 <h1 className="font-bold">Support</h1>

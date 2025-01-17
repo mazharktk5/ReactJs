@@ -39,4 +39,4 @@ const CartProvider = ({ children }) => {
   );
 };
 
-export default CartProvider;  // This is the default export
+export default CartProvider;  

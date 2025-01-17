@@ -1,15 +1,16 @@
 import React from 'react';
+import profile from '../assets/images/Profile/profile.jpeg';
 
 
 const ProfilePage = () => {
-//   const user = {
-//     name: 'John Doe',
-//     email: 'johndoe@example.com',
-//     profileImage: 'https://via.placeholder.com/150',
-//     bio: 'Web Developer with a passion for creating beautiful and functional web applications.',
-//     location: 'New York, USA',
-//     joined: 'January 2022',
-//   };
+  const user = {
+    name: 'Mazhar',
+    email: 'ABC@example.com',
+    profileImage: {profile},
+    bio: 'Web Developer with a passion for creating beautiful and functional web applications.',
+    location: 'Peshawe, KPK',
+    joined: 'January 2025',
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 py-12 px-6">
@@ -18,7 +19,7 @@ const ProfilePage = () => {
         <div className="relative -mt-20 text-center">
           <img
             className="inline-block h-40 w-40 rounded-full ring-4 ring-white"
-            src={user.profileImage}
+            src={profile}
             alt="Profile"
           />
         </div>

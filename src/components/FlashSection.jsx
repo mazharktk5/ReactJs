@@ -30,8 +30,8 @@ const FlashSection = () => {
 
   // Handle adding a product to the cart
   const handleAddToCart = (product) => {
-     setNotifications(`${product.title} added to cart`);
-     setTimeout(() => setNotifications(null),3000),
+    setNotifications(`${product.title} added to cart`);
+    setTimeout(() => setNotifications(null), 3000);
     addToCart(product);  // Call addToCart from CartContext to add the product to the cart
   };
 
@@ -45,13 +45,15 @@ const FlashSection = () => {
           ) : (
             Array.isArray(products) && products.length > 0 ? (
               products.slice(0, 4).map((product) => (
-                <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md ">
+                <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between">
                   <img
                     src={product.image}
                     alt={product.title}
                     className="w-full h-48 object-cover rounded-md bg-[#F5F5F5]"
                   />
-                  <h3 className="mt-4 text-xl font-semibold">{product.title}</h3>
+                  <div className="mt-4">
+                    <h3 className="text-xl font-semibold h-16 overflow-hidden">{product.title}</h3>
+                  </div>
                   <p className="text-lg text-red-600">${product.price}</p>
                   <div className="rating mt-2 text-yellow-400">
                     {'★'.repeat(Math.floor(product.rating.rate))}
@@ -59,7 +61,7 @@ const FlashSection = () => {
                     <span className="ml-2 text-sm text-gray-500">({product.rating.rate})</span>
                   </div>
                   <button
-                    className="mt-7 bg-black text-white py-2 px-4 rounded-lg hover:bg-slate-500 focus:outline-none"
+                    className="mt-4 bg-black text-white py-2 px-4 rounded-lg hover:bg-slate-500 focus:outline-none"
                     onClick={() => handleAddToCart(product)} // Call handleAddToCart
                   >
                     Add to Cart
@@ -75,7 +77,7 @@ const FlashSection = () => {
 
       <div className="flex justify-center mt-5 mb-4">
         <Link to="/all-products">
-          <button className="bg-red-500 text-white py-2 px-4 rounded-lg hover hover:bg-red-600   focus:outline-none">
+          <button className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
             View All Products
           </button>
         </Link>
