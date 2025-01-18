@@ -1,21 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../components/CartContext'; // Adjust the import path based on your folder structure
+import { CartContext } from '../components/CartContext'; 
+import Wishlist from '../assets/images/wishlist.png';
 
 const BestSellingsSection = () => {
-  const { addToCart } = useContext(CartContext); // Access addToCart from CartContext
+  const { addToCart } = useContext(CartContext); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState();
 
-  // Fetch products data from the fake API
+  
   useEffect(() => {
-    fetch('https://fakestoreapi.com/products')  // Replace with your actual API URL
+    fetch('https://fakestoreapi.com/products')  
       .then(response => response.json())
       .then(data => {
-        console.log(data);  // Log the data to check its structure
+        console.log(data); 
         if (Array.isArray(data)) {
-          setProducts(data);  // Set products data if it's an array
+          setProducts(data);  
         } else {
           console.error('Invalid data format:', data);
         }
@@ -24,32 +25,49 @@ const BestSellingsSection = () => {
         console.error('Error fetching products:', error);
       })
       .finally(() => {
-        setLoading(false);  // Set loading to false once the request is finished
+        setLoading(false);  
       });
   }, []);
 
-  // Handle adding a product to the cart
+  
   const handleAddToCart = (product) => {
     setNotifications(`${product.title} added to cart`);
     setTimeout(() => setNotifications(null), 3000);
-    addToCart(product);  // Call addToCart from CartContext to add the product to the cart
+    addToCart(product);  
   };
 
   return (
     <>
       <section className="best-sellings-section p-8 bg-gray-100 mt-5">
+      <div className='flex mb-2'>
+      <div className='h-10 w-5 bg-red-500 border rounded-md'>
+        
+</div>
+<h1 className='text-red-500 font-semibold  mt-2 ml-2 leading-tight'>This Month</h1>
+      </div>
+        <div className='flex justify-between'>
         <h2 className="text-2xl font-bold mb-6">Best Sellings</h2>
+        <Link to="/all-BestSellings">
+          <button className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
+            View All
+          </button>
+        </Link>
+        </div>
         <div className="product-container grid grid-cols-4 gap-4">
           {loading ? (
-            <p>Loading products...</p> // Display loading message
+            <p>Loading products...</p> 
           ) : (
             Array.isArray(products) && products.length > 0 ? (
               products.slice(0, 4).map((product) => (
-                <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between">
+                <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between relative">
+                  
+                  <div>
+                    <img src={Wishlist} alt="Add to Wishlist" className="w-6 h-6 cursor-pointer absolute top-4 right-1 z-20 bg-white rounded-full" />
+                  </div>
                   <img
                     src={product.image}
                     alt={product.title}
-                    className="w-full h-48 object-cover rounded-md bg-[#F5F5F5]"
+                    className="w-full h-48 object-cover rounded-md "
                   />
                   <div className="mt-4">
                     <h3 className="text-xl font-semibold h-16 overflow-hidden">{product.title}</h3>
@@ -62,26 +80,20 @@ const BestSellingsSection = () => {
                   </div>
                   <button
                     className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-slate-500 focus:outline-none"
-                    onClick={() => handleAddToCart(product)} // Call handleAddToCart
+                    onClick={() => handleAddToCart(product)} 
                   >
                     Add to Cart
                   </button>
                 </div>
               ))
             ) : (
-              <p>No products available.</p> // Fallback message if no products are fetched
+              <p>No products available.</p> 
             )
           )}
         </div>
       </section>
 
-      <div className="flex justify-center mt-5 mb-4">
-        <Link to="/all-BestSellings">
-          <button className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 focus:outline-none">
-            View All
-          </button>
-        </Link>
-      </div>
+      
     </>
   );
 };

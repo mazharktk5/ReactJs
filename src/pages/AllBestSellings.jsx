@@ -37,7 +37,7 @@ const AllBestSellings = () => {
         ) : (
           Array.isArray(products) && products.length > 0 ? (
             products.map(product => (
-              <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md">
+              <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between">
                 <img
                   src={product.image}
                   alt={product.title}
@@ -51,8 +51,8 @@ const AllBestSellings = () => {
                   <span className="ml-2 text-sm text-gray-500">({product.rating.rate})</span>
                 </div>
                 <button
-                  className="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none"
-                  onClick={() => handleAddToCart(product)} // Add product to cart on click
+                  className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-300 focus:outline-none"
+                  onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart
                 </button>

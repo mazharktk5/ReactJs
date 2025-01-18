@@ -49,7 +49,7 @@ const Cart = () => {
                       onChange={(e) => updateQuantity(product.id, parseInt(e.target.value))}
                       className="border rounded p-2"
                     >
-                      {[...Array(10).keys()].map(num => (
+                      {[...Array(5).keys()].map(num => (
                         <option key={num} value={num + 1}>
                           {num + 1}
                         </option>
@@ -84,11 +84,11 @@ const Cart = () => {
             Apply Coupon
           </button>
         </div>
-        <div className="bg-white p-4 rounded-lg shadow-md">
-          <h3 className="text-lg font-bold mb-2">Cart Total</h3>
+        <div className="bg-white p-8 flex flex-col gap-2 rounded-lg shadow-md">
+          <h3 className="text-lg font-bold mb-2 text-center ">Cart Total</h3>
           <p className="flex justify-between">
             <span>Subtotal:</span>
-            <span>${cart.reduce((total, product) => total + product.price * product.quantity, 0)}</span>
+            <span>${cart.reduce((total, product) => total + product.price * product.quantity, 0).toFixed(2)}</span>
           </p>
           <p className="flex justify-between">
             <span>Shipping:</span>
@@ -96,7 +96,7 @@ const Cart = () => {
           </p>
           <p className="flex justify-between font-semibold">
             <span>Total:</span>
-            <span>${cart.reduce((total, product) => total + product.price * product.quantity, 0)}</span>
+            <span>${cart.reduce((total, product) => total + product.price * product.quantity, 0).toFixed(2)}</span>
           </p>
           <button className="bg-red-500 text-white p-2 w-full mt-4 rounded hover:bg-red-600">
             Proceed to Checkout
