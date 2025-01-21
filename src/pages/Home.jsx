@@ -2,6 +2,7 @@ import React from 'react';
 import Hero from '../components/Hero';
 import FlashSection from '../components/FlashSection'; 
 import BestSellings from '../components/BestSellings';
+import BrowseByCatogary from '../components/BrowseByCatogary';
  
 
 const Home = () => {
@@ -10,6 +11,7 @@ const Home = () => {
       
       <Hero />
       <FlashSection/>
+      <BrowseByCatogary/>
       <BestSellings/>
      
     </div>

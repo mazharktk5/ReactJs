@@ -73,7 +73,7 @@ const Cart = () => {
           </table>
         )}
       </div>
-      <div className="flex justify-between mt-6">
+      <div className="flex justify-between mt-6 ">
         <div>
           <input
             type="text"
@@ -84,7 +84,7 @@ const Cart = () => {
             Apply Coupon
           </button>
         </div>
-        <div className="bg-white p-8 flex flex-col gap-2 rounded-lg shadow-md">
+        <div className="bg-white p-10 flex flex-col gap-2 rounded-lg shadow-md mr-10">
           <h3 className="text-lg font-bold mb-2 text-center ">Cart Total</h3>
           <p className="flex justify-between">
             <span>Subtotal:</span>
