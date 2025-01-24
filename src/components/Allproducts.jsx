@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { CartContext } from '../components/CartContext';
-import SearchBar from './SearchBar'; // Import the SearchBar component
+import { FavoritesContext } from '../components/FavoratesContext'; // Import FavoritesContext
+import Wishlist from '../assets/images/Wishlist.png'; // Import Wishlist icon
+import SearchBar from '../components/SearchBar';
 
 const AllProducts = () => {
   const { addToCart } = useContext(CartContext);
+  const { favorites, addToFavorites, removeFromFavorites } = useContext(FavoritesContext); // Access favorites and functions
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(null);
@@ -30,19 +33,26 @@ const AllProducts = () => {
   };
 
   const handleSearch = (event) => {
-    setSearchTerm(event.target.value.toLowerCase()); // Update search term on input change
+    setSearchTerm(event.target.value.toLowerCase()); 
   };
 
-  // Filter products based on the search term
+  
   const filteredProducts = products.filter(product =>
     product.title.toLowerCase().includes(searchTerm)
   );
+  
+  const handleAddToFavorites = (product) => {
+    addToFavorites(product);
+  };
+
+  const handleRemoveFromFavorites = (productId) => {
+    removeFromFavorites(productId);
+  };
 
   return (
     <section className="all-products-section p-8 bg-gray-100">
       <h2 className="text-2xl font-bold mb-6">All Products</h2>
 
-      {/* Use the SearchBar component */}
       <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
 
       {/* Notification */}
@@ -59,16 +69,31 @@ const AllProducts = () => {
         ) : (
           filteredProducts.length > 0 ? (
             filteredProducts.map(product => (
-              <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between">
+              <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between relative">
+                <div className="w-12 h-7 bg-red-500 text-white absolute top-1 left-1 rounded-md text-center">
+                  -40%
+                </div>
+                <img
+                  src={Wishlist}
+                  alt="Add to Wishlist"
+                  className="w-7 h-7 cursor-pointer absolute top-2 right-2 z-20 bg-white rounded-full"
+                  onClick={() => {
+                    if (favorites.some((item) => item.id === product.id)) {
+                      handleRemoveFromFavorites(product.id);
+                    } else {
+                      handleAddToFavorites(product);
+                    }
+                  }}
+                />
                 <img
                   src={product.image}
                   alt={product.title}
                   className="w-full h-48 object-cover rounded-md bg-[#F5F5F5]"
                 />
-                <h3 className="mt-4 text-xl font-semibold text-sm sm:text-base">{product.title}</h3>
+                <h3 className="mt-4 text-xl font-semibold">{product.title}</h3>
                 <p className="text-lg text-red-600">${product.price}</p>
                 <button
-                  className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition-colors duration-300 focus:outline-none"
+                  className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800"
                   onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart

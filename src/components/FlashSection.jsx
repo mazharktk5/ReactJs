@@ -1,16 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../components/CartContext'; // Adjust the import path based on your folder structure
+import { CartContext } from '../components/CartContext';
+import { FavoritesContext } from '../components/FavoratesContext';
 import Wishlist from '../assets/images/Wishlist.png';
 
 const FlashSection = () => {
-  const { addToCart } = useContext(CartContext); // Access addToCart from CartContext
+  const { cart, addToCart } = useContext(CartContext); // Access `cart` here
+  const { favorites, addToFavorites, removeFromFavorites } = useContext(FavoritesContext);
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // State for error handling
-  const [notifications, setNotifications] = useState();
+  const [error, setError] = useState(null);
+  const [notifications, setNotifications] = useState(null);
 
-  // Fetch products data from the fake API
   useEffect(() => {
     fetch('https://fakestoreapi.com/products')
       .then((response) => {
@@ -35,11 +37,29 @@ const FlashSection = () => {
       });
   }, []);
 
-  // Handle adding a product to the cart
   const handleAddToCart = (product) => {
-    setNotifications(`${product.title} added to cart`);
+    const existingProduct = cart.find((item) => item.id === product.id);
+
+    if (existingProduct) {
+      setNotifications(`${product.title} is already in the cart.`);
+    } else {
+      addToCart(product);
+      setNotifications(`${product.title} added to cart.`);
+    }
+
     setTimeout(() => setNotifications(null), 3000);
-    addToCart(product);
+  };
+
+  const handleAddToFavorites = (product) => {
+    addToFavorites(product);
+    setNotifications(`${product.title} added to favorites.`);
+    setTimeout(() => setNotifications(null), 3000);
+  };
+
+  const handleRemoveFromFavorites = (productId) => {
+    removeFromFavorites(productId);
+    setNotifications('Removed from favorites.');
+    setTimeout(() => setNotifications(null), 3000);
   };
 
   return (
@@ -47,19 +67,19 @@ const FlashSection = () => {
       <section className="flash-section p-8 bg-gray-100 mt-5">
         <div className="flex items-center mb-4">
           <div className="h-10 w-1 bg-red-500 border rounded-md"></div>
-          <h1 className="text-red-500 ml-1  mt-1 text-2xl font-bold  leading-tight">Today's Flash Sales</h1>
+          <h1 className="text-red-500 ml-1 mt-1 text-2xl font-bold leading-tight">Today's Flash Sales</h1>
         </div>
         {notifications && (
-          <div className="bg-green-500 text-white p-2 rounded-md mb-4">
+          <div className="bg-green-500 text-white p-2 rounded-md mb-4 top-16">
             {notifications}
           </div>
         )}
         {error ? (
-          <p className="text-red-500">{error}</p> // Display error message if fetch fails
+          <p className="text-red-500">{error}</p>
         ) : (
           <div className="product-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {loading ? (
-              <p>Loading products...</p> // Display loading message
+              <p>Loading products...</p>
             ) : (
               Array.isArray(products) && products.length > 0 ? (
                 products.slice(0, 4).map((product) => (
@@ -74,6 +94,13 @@ const FlashSection = () => {
                       src={Wishlist}
                       alt="Add to Wishlist"
                       className="w-7 h-7 cursor-pointer absolute top-2 right-2 z-20 bg-white rounded-full"
+                      onClick={() => {
+                        if (favorites.some((item) => item.id === product.id)) {
+                          handleRemoveFromFavorites(product.id);
+                        } else {
+                          handleAddToFavorites(product);
+                        }
+                      }}
                     />
                     <img
                       src={product.image}
