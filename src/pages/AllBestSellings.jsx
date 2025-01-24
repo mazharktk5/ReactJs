@@ -1,42 +1,42 @@
-import React, { useState, useEffect, useContext } from 'react';
+// src/pages/AllBestSellings.js
+import React, { useState, useContext } from 'react';
 import { CartContext } from '../components/CartContext'; // Adjust import path based on where your CartContext is
+import SearchBar from '../components/SearchBar'; // Import the SearchBar component
+import useProducts from '../hooks/useProducts'; // Import the custom hook for fetching products
 
 const AllBestSellings = () => {
   const { addToCart } = useContext(CartContext); // Access addToCart from CartContext
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { products, loading, error } = useProducts(); // Fetch products using the custom hook
+  const [searchTerm, setSearchTerm] = useState('');
 
-  useEffect(() => {
-    fetch('https://fakestoreapi.com/products')
-      .then(response => response.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setProducts(data);
-        } else {
-          console.error('Invalid data format:', data);
-        }
-      })
-      .catch(error => console.error('Error fetching products:', error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  // Handle add to cart
-  const handleAddToCart = (product) => {
-    
-
+  const handleAddToCart = product => {
     console.log(`Added to cart: ${product.title}`);
     addToCart(product); // Add the product to the cart
   };
 
+  const handleSearch = (event) => {
+    setSearchTerm(event.target.value.toLowerCase());
+  };
+
+  const filteredProducts = products.filter(product =>
+    product.title.toLowerCase().includes(searchTerm)
+  );
+
   return (
     <section className="all-products-section p-8 bg-gray-100">
-      <h2 className="text-2xl font-bold mb-6">Best sellings</h2>
-      <div className="product-container grid grid-cols-4 gap-4">
-        {loading ? (
-          <p>Loading products...</p>
-        ) : (
-          Array.isArray(products) && products.length > 0 ? (
-            products.map(product => (
+      <h2 className="text-2xl font-bold mb-6">Best Sellings</h2>
+
+      {/* Use the SearchBar component */}
+      <SearchBar searchTerm={searchTerm} handleSearch={handleSearch} />
+
+      {loading ? (
+        <p>Loading products...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
+      ) : (
+        <div className="product-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map(product => (
               <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between">
                 <img
                   src={product.image}
@@ -59,10 +59,10 @@ const AllBestSellings = () => {
               </div>
             ))
           ) : (
-            <p>No products available.</p>
-          )
-        )}
-      </div>
+            <p>No products found matching your search.</p>
+          )}
+        </div>
+      )}
     </section>
   );
 };

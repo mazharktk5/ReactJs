@@ -1,37 +1,54 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import heartIcon from '../assets/images/Wishlist.png';
 import cartIcon from '../assets/images/Cart.png';
-import searchIcon from '../assets/images/search.png';
 import { CartContext } from '../components/CartContext';
 
 const Navbar = () => {
   const { cart } = useContext(CartContext);
+  
+  // State to toggle mobile menu
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <nav className="flex items-center justify-around p-4 bg-white shadow-md sticky top-0 z-10">
+    <nav className="flex items-center justify-around p-4 md:p-6 bg-white shadow-md sticky top-0 z-10">
+      {/* Logo */}
       <div className="text-xl font-bold">
         <Link to="/">Mazhar Electronics</Link>
       </div>
-      <div className="flex space-x-8">
+
+      {/* Mobile Menu Button */}
+      <div className="md:hidden flex items-center">
+        <button
+          className="text-gray-600 hover:text-purple-600 focus:outline-none"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          <i className={`fas fa-bars ${menuOpen ? "transform rotate-90" : ""}`}></i>
+        </button>
+      </div>
+
+      {/* Mobile Menu Links */}
+      <div
+        className={`${
+          menuOpen ? "block" : "hidden"
+        } absolute top-16 left-0 w-full bg-white p-4 md:hidden shadow-md`}
+      >
+        <Link to="/" className="block p-2">Home</Link>
+        <Link to="/contact" className="block p-2">Contact</Link>
+        <Link to="/about" className="block p-2">About</Link>
+        <Link to="/signup" className="block p-2">Sign Up</Link>
+      </div>
+
+      {/* Desktop Navigation Links */}
+      <div className="hidden md:flex items-center space-x-8">
         <Link to="/" className="hover:underline hover:font-semibold">Home</Link>
         <Link to="/contact" className="hover:underline hover:font-semibold">Contact</Link>
         <Link to="/about" className="hover:underline hover:font-semibold">About</Link>
         <Link to="/signup" className="hover:underline hover:font-semibold">Sign Up</Link>
       </div>
-      <div className="flex items-center space-x-4">
-        <div className="relative">
-          <input
-            type="text"
-            placeholder="What are you looking for?"
-            className="pl-4 pr-10 py-2 border rounded-md shadow-sm focus:outline-none"
-          />
-          <img
-            src={searchIcon}
-            alt="Search"
-            className="absolute right-2 cursor-pointer top-2.5 w-4 h-4 text-gray-500"
-          />
-        </div>
+
+      {/* Icons - Wishlist, Cart, Profile */}
+      <div className="flex items-center space-x-4 z-20">
         <img
           src={heartIcon}
           alt="Wishlist"
@@ -49,9 +66,7 @@ const Navbar = () => {
             </span>
           )}
         </Link>
-        <div>
-        <Link to="/profile"> Profile</Link>
-        </div>
+        <Link to="/profile" className="text-gray-600 hover:text-purple-600">Profile</Link>
       </div>
     </nav>
   );

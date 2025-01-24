@@ -3,6 +3,7 @@ import Hero from '../components/Hero';
 import FlashSection from '../components/FlashSection'; 
 import BestSellings from '../components/BestSellings';
 import BrowseByCatogary from '../components/BrowseByCatogary';
+import BenefitsSection from '../components/BenefitsSection';
  
 
 const Home = () => {
@@ -13,6 +14,7 @@ const Home = () => {
       <FlashSection/>
       <BrowseByCatogary/>
       <BestSellings/>
+      <BenefitsSection/>
      
     </div>
   );

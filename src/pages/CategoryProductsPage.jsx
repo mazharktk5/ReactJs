@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { CartContext } from '../components/CartContext'; // Import CartContext
+import { CartContext } from '../components/CartContext'; 
 
 function CategoryProductsPage() {
-  const { category } = useParams(); // Getting the category from the URL
-  const { addToCart } = useContext(CartContext); // Get addToCart from CartContext
+  const { category } = useParams(); 
+  const { addToCart } = useContext(CartContext); 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ function CategoryProductsPage() {
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error('Error fetching products:', error))
-      .finally(() => setLoading(false)); // Stop loading once data is fetched
+      .finally(() => setLoading(false)); 
   }, [category]);
 
   const handleAddToCart = (product) => {
@@ -31,7 +31,7 @@ function CategoryProductsPage() {
         <h2 className="text-2xl font-bold">Products in {category}</h2>
       </div>
 
-      <div className="product-container grid grid-cols-4 gap-4">
+      <div className="product-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {loading ? (
           <p>Loading products...</p>
         ) : (
@@ -44,7 +44,7 @@ function CategoryProductsPage() {
                   className="w-full h-48 object-cover rounded-md"
                 />
                 <div className="mt-4">
-                  <h3 className="text-xl font-semibold h-16 overflow-hidden">{product.title}</h3>
+                  <h3 className="text-xl font-semibold h-16 overflow-hidden text-sm sm:text-base">{product.title}</h3>
                 </div>
                 <p className="text-lg text-red-600">${product.price}</p>
                 <div className="rating mt-2 text-yellow-400">

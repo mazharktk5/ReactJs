@@ -12,7 +12,8 @@ import Login from './pages/Login';
 import ProfilePage from './pages/ProfilePage';
 import { UserProvider, useUser } from './components/UserContext';
 import Contact from './pages/Contact';
-import CategoryProductsPage from './pages/CategoryProductsPage'; // Import your new page
+import CategoryProductsPage from './pages/CategoryProductsPage'; 
+import About from './pages/About';
 
 const App = () => {
   return (
@@ -33,6 +34,7 @@ const App = () => {
                 <Route path="/contact" element={<Contact />} />
                 {/* Add the route for category products */}
                 <Route path="/products/:category" element={<CategoryProductsPage />} />
+                <Route path = "/About" element={<About />} />
               </Routes>
             </main>
             <Footer />
