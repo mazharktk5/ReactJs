@@ -1,12 +1,12 @@
 import React from "react";
 import logo from "../assets/images/hero/herologo.png";
-import heroImage from "../assets/images/hero/image4.jpg"; // Replace with a fashion-related image
+import heroImage from "../assets/images/hero/image4.jpg"; 
 
 const Hero = () => {
   return (
     <section className="hero flex flex-col md:flex-row justify-between items-center bg-black text-white bg-cover bg-no-repeat border-2 mt-10 mx-5 p-5 rounded-lg">
       
-      {/* Left Section (Text) */}
+     
       <div className="flex flex-col space-y-4 mb-7 md:mb-0 md:w-1/2 md:pl-10 text-center md:text-left">
         <div className="flex justify-center md:justify-start items-center space-x-2">
           <img src={logo} alt="Brand Logo" className="w-12 h-12" />
@@ -23,7 +23,7 @@ const Hero = () => {
         </button>
       </div>
 
-      {/* Right Section (Image) */}
+     
       <div className="flex justify-center md:w-1/2">
         <img
           src={heroImage}
