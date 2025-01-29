@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Import to navigate programmatically
-import { useUser } from "../components/UserContext"; // Import the UserContext
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Signupimage from "../assets/images/SignUp/Signupimage.png";
 import Google from "../assets/images/SignUp/Google.png";
 import { Link } from "react-router-dom";
+import { FirebaseContext } from "../context/Firebase";
+import { toast } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Firebase imports
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -11,38 +14,55 @@ const Signup = () => {
     email: "",
     password: "",
   });
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const { setIsSignedUp } = useUser(); // Access the setIsSignedUp function from context
   const navigate = useNavigate();
+  const { signup } = useContext(FirebaseContext);
+  const auth = getAuth();
+  const googleProvider = new GoogleAuthProvider();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear form fields after submission
+    if (!formData.name || !formData.email || !formData.password) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
+    try {
+      await signup(formData.email, formData.password);
+      toast.success("Account created successfully!");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      
+    } catch (error) {
+      console.error("Error signing up:", error.message);
+      toast.error("Error signing up: " + error.message);
+    }
+
     setFormData({
       name: "",
       email: "",
       password: "",
     });
+  };
 
-    // Update the global state to reflect sign-up status
-    setIsSignedUp(true);
-
-    // Display the popup message
-    setIsPopupVisible(true);
-
-    // Navigate to the home page after 2 seconds
-    setTimeout(() => {
-      setIsPopupVisible(false);
-      navigate("/Login");  // Redirect to the home page
-    }, 2000);
-
-    // Log form data (Optional)
-    console.log(formData);
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const user = result.user;
+      toast.success(`Welcome, ${user.displayName}!`);
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+       
+    } catch (error) {
+      console.error("Error with Google Sign-In:", error.message);
+      toast.error("Error with Google Sign-In: " + error.message);
+    }
   };
 
   return (
@@ -89,7 +109,10 @@ const Signup = () => {
             >
               Create Account
             </button>
-            <div className="flex items-center justify-center border border-gray-300 rounded-lg px-4 py-2 cursor-pointer">
+            <div
+              onClick={handleGoogleSignIn}
+              className="flex items-center justify-center border border-gray-300 rounded-lg px-4 py-2 cursor-pointer mt-4"
+            >
               <img src={Google} alt="Google icon" className="w-5 h-5 mr-2" />
               Sign up with Google
             </div>
@@ -102,15 +125,6 @@ const Signup = () => {
           </form>
         </div>
       </div>
-
-      {/* Popup message for successful signup */}
-      {isPopupVisible && (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg shadow-lg">
-            <p className="text-green-500 font-bold">Sign Up Successfully!</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

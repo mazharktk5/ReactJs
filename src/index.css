@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+  }
+  
+  .mobile-menu.block {
+    max-height: 500px; /* Adjust based on your content height */
+  }
+  
+  /* Better touch targets */
+  @media (max-width: 767px) {
+    .mobile-menu a,
+    .mobile-menu button {
+      padding: 12px 0;
+      min-width: 120px;
+      text-align: center;
+    }
+  }

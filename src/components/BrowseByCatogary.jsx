@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 function BrowseByCategory() {
   const [categories, setCategories] = useState([]);
@@ -36,23 +37,29 @@ function BrowseByCategory() {
         <h1 className="text-red-500 ml-1 text-2xl font-bold leading-tight">Explore</h1>
       </div>
 
-      <div id="categories">
+      <div id="categories" className="mt-5">
         <h1 className="text-2xl font-bold mb-6">Browse By Category</h1>
 
-        {/* Responsive Category Container */}
-        <div className="category-container grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+       
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
           {categories.map((category) => (
-            <Link
-              to={`/products/${category}`}
+            <motion.div
               key={category}
-              className={`category cursor-pointer p-5 border border-gray-300 rounded-xl flex flex-col items-center text-center transition-all duration-300 transform hover:bg-red-500 hover:text-white ${selectedCategory === category ? 'bg-red-500 text-white' : ''}`}
-              onClick={() => setSelectedCategory(category)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: "spring", stiffness: 200 }}
             >
-              {/* Category Icon */}
-              <span className="icon text-3xl sm:text-4xl mb-2">{categoryIcons[category]}</span>
-              {/* Category Name */}
-              <span className="category-name font-bold capitalize text-sm sm:text-base">{category}</span>
-            </Link>
+              <Link
+                to={`/products/${category}`}
+                className={`category cursor-pointer p-5 border border-gray-300 rounded-xl flex flex-col items-center text-center transition-all duration-300 transform shadow-lg hover:bg-red-500 hover:text-white ${selectedCategory === category ? 'bg-red-500 text-white' : 'bg-white'}`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                
+                <span className="icon text-4xl mb-2">{categoryIcons[category] || "📦"}</span>
+                
+                <span className="category-name font-bold capitalize text-sm sm:text-base">{category}</span>
+              </Link>
+            </motion.div>
           ))}
         </div>
       </div>

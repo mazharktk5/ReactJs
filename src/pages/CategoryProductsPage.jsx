@@ -1,64 +1,119 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { CartContext } from '../components/CartContext'; 
+import { CartContext } from '../components/CartContext';
+import { motion } from 'framer-motion';
 
 function CategoryProductsPage() {
-  const { category } = useParams(); 
-  const { addToCart } = useContext(CartContext); 
+  const { category } = useParams();
+  const { addToCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useState(null);
+  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     fetch(`https://fakestoreapi.com/products/category/${category}`)
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error('Error fetching products:', error))
-      .finally(() => setLoading(false)); 
+      .finally(() => setLoading(false));
   }, [category]);
 
   const handleAddToCart = (product) => {
     addToCart(product); // Add product to cart
+    setNotifications(`${product.title} added to cart.`);
+    setNotificationType("success");
+    setTimeout(() => setNotifications(null), 3000);
   };
 
   return (
-    <section className="category-products-section p-8 bg-gray-100 mt-5">
-      <div className="flex mb-2">
-        <div className="h-10 w-5 bg-red-500 border rounded-md"></div>
-        <h1 className="text-red-500 ml-1 mt-1 text-2xl font-bold mb-6 leading-tight">{category} Products</h1>
-      </div>
+    <section className="category-products-section p-10 bg-gray-100">
 
-      <div className="flex justify-between mb-6">
-        <h2 className="text-2xl font-bold">Products in {category}</h2>
-      </div>
+      <motion.div
+        className="mb-6 flex flex-col sm:flex-row items-center justify-between"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        <div className="flex items-center">
+          <div className="h-10 w-5 bg-red-500 border rounded-md"></div>
+          <h1 className="text-red-500 ml-2 text-2xl sm:text-3xl font-bold">
+            {category} Products
+          </h1>
+        </div>
+      </motion.div>
 
-      <div className="product-container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+     
+      {notifications && (
+        <motion.div
+          className={`${notificationType === "success"
+            ? "bg-green-500"
+            : notificationType === "error"
+              ? "bg-red-500"
+              : "bg-blue-500"
+            } text-white p-2 rounded-md mb-4 text-center`}
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+        >
+          {notifications}
+        </motion.div>
+      )}
+
+     
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {loading ? (
           <p>Loading products...</p>
         ) : (
           Array.isArray(products) && products.length > 0 ? (
             products.map((product) => (
-              <div key={product.id} className="product-card bg-[#F5F5F5] p-4 rounded-lg shadow-md flex flex-col justify-between relative">
-                <img
+              <motion.div
+                key={product.id}
+                className="bg-white p-6 rounded-lg shadow-lg transition duration-300 hover:shadow-xl relative"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                
+                <div className="w-14 h-8 bg-red-500 text-white absolute top-2 left-2 rounded-md text-center text-sm flex items-center justify-center font-semibold">
+                  -40%
+                </div>
+
+               
+                <motion.img
                   src={product.image}
                   alt={product.title}
-                  className="w-full h-48 object-cover rounded-md"
+                  className="w-full h-48 object-contain rounded-md"
+                  whileHover={{ scale: 1.08 }}
                 />
-                <div className="mt-4">
-                  <h3 className="text-xl font-semibold h-16 overflow-hidden text-sm sm:text-base">{product.title}</h3>
+
+                
+                <div className="mt-4 text-center">
+                  <h3 className="text-lg font-semibold text-gray-800 h-16 overflow-hidden">
+                    {product.title}
+                  </h3>
+                  <p className="text-xl font-bold text-red-600">${product.price}</p>
+                  <div className="rating mt-2 text-yellow-400">
+                    {"★".repeat(Math.floor(product.rating.rate))}
+                    {"☆".repeat(5 - Math.floor(product.rating.rate))}
+                    <span className="ml-2 text-sm text-gray-500">
+                      ({product.rating.rate})
+                    </span>
+                  </div>
                 </div>
-                <p className="text-lg text-red-600">${product.price}</p>
-                <div className="rating mt-2 text-yellow-400">
-                  {'★'.repeat(Math.floor(product.rating.rate))}
-                  {'☆'.repeat(5 - Math.floor(product.rating.rate))}
-                  <span className="ml-2 text-sm text-gray-500">({product.rating.rate})</span>
-                </div>
-                <button
-                  className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-slate-500 focus:outline-none"
-                  onClick={() => handleAddToCart(product)} // Add to cart
+
+                
+                <motion.button
+                  className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleAddToCart(product)}
                 >
                   Add to Cart
-                </button>
-              </div>
+                </motion.button>
+              </motion.div>
             ))
           ) : (
             <p>No products available in this category.</p>

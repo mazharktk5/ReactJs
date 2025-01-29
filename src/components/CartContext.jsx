@@ -16,7 +16,6 @@ const CartProvider = ({ children }) => {
     }
   };
 
-  
   const removeFromCart = (productId) => {
     setCart((prevCart) => prevCart.filter((product) => product.id !== productId));
   };
@@ -40,3 +39,6 @@ const CartProvider = ({ children }) => {
 };
 
 export default CartProvider;  
+
+
+

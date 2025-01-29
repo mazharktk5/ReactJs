@@ -73,7 +73,7 @@ const Favorites = () => {
                 >
                   Add to Cart
                 </button>
-                {/* Remove from Favorites Button */}
+                
                 <button
                   className="mt-2 w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors duration-300 focus:outline-none"
                   onClick={() => handleRemoveFromFavorites(product.id)}

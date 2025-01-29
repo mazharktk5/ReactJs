@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import CartProvider from './components/CartContext';
-import FavoritesProvider from './components/FavoratesContext'; // Updated to FavoritesContext
+import { FavoritesProvider } from './components/FavoratesContext'; 
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import AllProducts from './components/AllProducts';
@@ -11,47 +11,148 @@ import Footer from './components/Footer';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import ProfilePage from './pages/ProfilePage';
-import { UserProvider, useUser } from './components/UserContext';
+import 'react-toastify/dist/ReactToastify.css'; 
+
 import Contact from './pages/Contact';
 import CategoryProductsPage from './pages/CategoryProductsPage';
 import About from './pages/About';
-import Favorites from './pages/FavoritesPage'; // Corrected to FavoritesPage
+import Favorites from './pages/FavoritesPage';
+import { FirebaseProvider } from './context/Firebase'; 
+import { useEffect } from 'react';
+import { getAuth,onAuthStateChanged } from 'firebase/auth';
+import { app } from './context/Firebase';
+import ProtectedRoute from './components/ProtectedRoutes';
+import { UserProvider } from '../src/context/Usercontext';
+import { ToastContainer } from "react-toastify";
+
+
+
+// Initialize Firebase
+const auth = getAuth(app);
+
+
 
 const App = () => {
+
+  const [user , setUser] = useState()
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        
+        console.log('User is signed in:', user);
+        setUser(user);
+      } else {
+        
+        console.log('User is signed out');
+        setUser(null);
+      }
+    });
+
+    
+    return () => unsubscribe();
+
+  },[]);
+
+
   return (
+    
     <UserProvider>
-      <CartProvider>
-        <FavoritesProvider> {/* Wrap FavoritesProvider */}
-          <Router>
-            <div className="flex flex-col min-h-screen">
-              <Navbar />
-              <main className="flex-grow">
+    <FirebaseProvider>
+      
+        <CartProvider>
+          <FavoritesProvider>
+            
+            <ToastContainer />
+            <Router>
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
                 <Routes>
-                  <Route path="/" element={<PrivateRoute />} />
-                  <Route path="/all-products" element={<AllProducts />} />
-                  <Route path="/cart" element={<CartPage />} />
-                  <Route path="/all-bestsellings" element={<AllBestSellings />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/products/:category" element={<CategoryProductsPage />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/favorites" element={<Favorites />} /> {/* Updated route */}
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </Router>
-        </FavoritesProvider>
-      </CartProvider>
+  
+  <Route path="/" element={<Home />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="/login" element={<Login />} />
+
+  
+  <Route
+    path="/all-products"
+    element={
+      <ProtectedRoute>
+        <AllProducts />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/cart"
+    element={
+      <ProtectedRoute>
+        <CartPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/all-bestsellings"
+    element={
+      <ProtectedRoute>
+        <AllBestSellings />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/profile"
+    element={
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/contact"
+    element={
+      <ProtectedRoute>
+        <Contact />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/products/:category"
+    element={
+      <ProtectedRoute>
+        <CategoryProductsPage />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/about"
+    element={
+      <ProtectedRoute>
+        <About />
+      </ProtectedRoute>
+    }
+  />
+  <Route
+    path="/favorites"
+    element={
+      <ProtectedRoute>
+        <Favorites />
+      </ProtectedRoute>
+    }
+  />
+  
+</Routes>
+
+
+                </main>
+                <Footer />
+              </div>
+            </Router>
+          </FavoritesProvider>
+        </CartProvider>
+      
+    </FirebaseProvider>
     </UserProvider>
   );
 };
 
-const PrivateRoute = () => {
-  const { isSignedUp } = useUser();
-  return isSignedUp ? <Home /> : <Navigate to="/signup" />;
-};
 
 export default App;

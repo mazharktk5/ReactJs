@@ -3,47 +3,46 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <>
-      <div className="footer bg-black text-white p-6">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {/* Mazhar Electronics Section */}
-            <div className="flex flex-col gap-2">
-              <h1 className="font-bold text-xl">Mazhar Electronics</h1>
-              <p>Subscribe</p>
-              <p>Get 10% off on your <br /> first order</p>
-            </div>
+    <footer className="bg-black text-white py-10 px-5">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 text-sm">
+        
+        
+        <div className="flex flex-col space-y-3">
+          <h1 className="font-extrabold text-lg tracking-wide">Shopify</h1>
+          <p className="text-gray-300">Subscribe</p>
+          <p className="text-gray-400">
+            Get <span className="text-yellow-400 font-medium">10% off</span> on your first order!
+          </p>
+        </div>
 
-            {/* Support Section */}
-            <div className="flex flex-col gap-2">
-              <h1 className="font-bold text-xl">Support</h1>
-              <p>Main board bazar</p>
-              <p>mazharahmad1@gmail.com</p>
-            </div>
+       
+        <div className="flex flex-col space-y-3">
+          <h1 className="font-extrabold text-lg tracking-wide">Support</h1>
+          <p className="text-gray-400">Main Board Bazar</p>
+          <p className="text-gray-400">mazharahmad1@gmail.com</p>
+        </div>
 
-            {/* Account Section */}
-            <div className="flex flex-col gap-2">
-              <h1 className="font-bold text-xl">Account</h1>
-              <p>My Account</p>
-              <Link to="/login" className="text-white hover:underline">
-                LogIn
-              </Link>
-              <Link to="/SignUp" className="text-white hover:underline">
-                Register
-              </Link>
-            </div>
+        
+        <div className="flex flex-col space-y-3">
+          <h1 className="font-extrabold text-lg tracking-wide">Account</h1>
+          <Link to="/login" className="text-gray-300 hover:text-yellow-400 transition-all duration-300">Log In</Link>
+          <Link to="/signup" className="text-gray-300 hover:text-yellow-400 transition-all duration-300">Register</Link>
+        </div>
 
-            {/* Quick Links Section */}
-            <div className="flex flex-col gap-2">
-              <h1 className="font-bold text-xl">Quick Links</h1>
-              <p>About</p>
-              <p>Privacy Policy</p>
-              <p>FAQs</p>
-            </div>
-          </div>
+        
+        <div className="flex flex-col space-y-3">
+          <h1 className="font-extrabold text-lg tracking-wide">Quick Links</h1>
+          <Link to="/about" className="text-gray-300 hover:text-yellow-400 transition-all duration-300">About</Link>
+          <Link to="/privacy-policy" className="text-gray-300 hover:text-yellow-400 transition-all duration-300">Privacy Policy</Link>
+          <Link to="/faqs" className="text-gray-300 hover:text-yellow-400 transition-all duration-300">FAQs</Link>
         </div>
       </div>
-    </>
+
+      
+      <div className="text-center text-gray-500 mt-8 text-xs">
+        © {new Date().getFullYear()} Mazhar Shopify. All rights reserved.
+      </div>
+    </footer>
   );
 };
 

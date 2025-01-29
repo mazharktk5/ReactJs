@@ -1,7 +1,18 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 
 export const FavoritesContext = createContext();
+
+
+export const useFavorites = () => {
+  const context = useContext(FavoritesContext);
+
+  if (!context) {
+    throw new Error('useFavorites must be used within a FavoritesProvider');
+  }
+
+  return context;
+};
 
 
 export const FavoritesProvider = ({ children }) => {
@@ -14,7 +25,7 @@ export const FavoritesProvider = ({ children }) => {
     }
   };
 
-
+  
   const removeFromFavorites = (productId) => {
     setFavorites(favorites.filter((item) => item.id !== productId));
   };
