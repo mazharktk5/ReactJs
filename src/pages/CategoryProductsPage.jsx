@@ -20,7 +20,7 @@ function CategoryProductsPage() {
   }, [category]);
 
   const handleAddToCart = (product) => {
-    addToCart(product); // Add product to cart
+    addToCart(product); 
     setNotifications(`${product.title} added to cart.`);
     setNotificationType("success");
     setTimeout(() => setNotifications(null), 3000);
