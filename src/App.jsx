@@ -8,7 +8,7 @@ import AllProducts from './components/Allproducts';
 import CartPage from './pages/Cart';
 import AllBestSellings from './pages/AllBestSellings';
 import Footer from './components/Footer';
-import Signup from './pages/Signup';
+import Signup from './pages/SignUp';
 import Login from './pages/Login';
 import ProfilePage from './pages/ProfilePage';
 import 'react-toastify/dist/ReactToastify.css';
