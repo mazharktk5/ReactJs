@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { CartContext } from "../components/CartContext";
 import { FavoritesContext } from "../components/FavoratesContext";
-import WishlistIcon from "../assets/images/wishlist.png";
+import WishlistIcon from "../assets/images/Wishlist.png";
 
 const BestSellingsSection = () => {
   const { addToCart, cart } = useContext(CartContext);
