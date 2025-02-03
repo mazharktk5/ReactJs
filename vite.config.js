@@ -1,12 +1,10 @@
-// vite.config.js
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// Set the base URL for GitHub Pages
 export default defineConfig({
-  base: "/ReactJs/", // Your GitHub repository name here
   plugins: [react()],
-  server: {
-    historyApiFallback: true, // Ensures proper routing on refresh during development
-  },
-})
+  base: "/",  // No subdirectory needed for Vercel
+  build: {
+    outDir: "dist"  // Vercel will auto-detect this
+  }
+});

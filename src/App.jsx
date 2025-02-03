@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { HashRouter as Router, Routes, Route } from 'react-router-dom'; // Change to HashRouter
+import { HashRouter as Router, Routes, Route } from 'react-router-dom'; 
 import CartProvider from './components/CartContext';
 import { FavoritesProvider } from './components/FavoratesContext';
 import Navbar from './components/Navbar';
@@ -23,7 +23,7 @@ import ProtectedRoute from './components/ProtectedRoutes';
 import { UserProvider } from './context/Usercontext';
 import { ToastContainer } from "react-toastify";
 
-// Initialize Firebase
+
 const auth = getAuth(app);
 
 const App = () => {
