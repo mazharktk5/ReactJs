@@ -4,7 +4,7 @@ import CartProvider from './components/CartContext';
 import { FavoritesProvider } from './components/FavoratesContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
-import AllProducts from './components/AllProducts';
+import AllProducts from './components/Allproducts';
 import CartPage from './pages/Cart';
 import AllBestSellings from './pages/AllBestSellings';
 import Footer from './components/Footer';
