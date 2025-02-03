@@ -1,8 +1,14 @@
 import { createContext } from "react";
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, 
+    signInWithPopup, 
+    GoogleAuthProvider 
+} from "firebase/auth";
 
-// Firebase configuration using Vite's import.meta.env
+// Firebase configuration
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_API_KEY,
     authDomain: import.meta.env.VITE_AUTH_DOMAIN,
@@ -16,22 +22,15 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
+// Firebase Context
 export const FirebaseContext = createContext();
 
 export const FirebaseProvider = (props) => {
-    // sign up user
-    const signup = (email, password) => {
-        return createUserWithEmailAndPassword(auth, email, password);
-    };
-
-    // login user
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
-    };
-
-    // login with google
+    const signup = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+    const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
     const googleLogin = () => {
-        return signInWithPopup(auth, new firebase.auth.GoogleAuthProvider());
+        const provider = new GoogleAuthProvider();
+        return signInWithPopup(auth, provider);
     };
 
     return (
