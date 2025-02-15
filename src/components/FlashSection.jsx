@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion"; // Import Framer Motion
+import { motion } from "framer-motion";
 import { CartContext } from "../components/CartContext";
 import { FavoritesContext } from "../components/FavoratesContext";
-import WishlistIcon from "../assets/images/Wishlist.png";
+import { useUser } from "../context/UserContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const FlashSection = () => {
   const { cart, addToCart } = useContext(CartContext);
-  const { favorites, addToFavorites, removeFromFavorites } = useContext(FavoritesContext);
-
+  const { favorites, addToFavorites } = useContext(FavoritesContext);
+  const { user } = useUser();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState(null);
-  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
@@ -32,31 +32,20 @@ const FlashSection = () => {
       });
   }, []);
 
+  const displayedProducts = useMemo(() => products.slice(0, 4), [products]);
+
   const handleAddToCart = (product) => {
-    const existingProduct = cart.find((item) => item.id === product.id);
-    if (existingProduct) {
-      setNotifications(`${product.title} is already in the cart.`);
-      setNotificationType("info");
+    if (!user) {
+      toast.error("Please log in to add items to the cart.");
     } else {
-      addToCart(product);
-      setNotifications(`${product.title} added to cart.`);
-      setNotificationType("success");
+      const existingProduct = cart.find((item) => item.id === product.id);
+      if (existingProduct) {
+        toast.info(`${product.title} is already in the cart.`);
+      } else {
+        addToCart(product);
+        toast.success(`${product.title} added to cart.`);
+      }
     }
-    setTimeout(() => setNotifications(null), 3000);
-  };
-
-  const handleAddToFavorites = (product) => {
-    addToFavorites(product);
-    setNotifications(`${product.title} added to wishlist.`);
-    setNotificationType("success");
-    setTimeout(() => setNotifications(null), 3000);
-  };
-
-  const handleRemoveFromFavorites = (product) => {
-    removeFromFavorites(product.id);
-    setNotifications(`${product.title} removed from wishlist.`);
-    setNotificationType("error");
-    setTimeout(() => setNotifications(null), 3000);
   };
 
   return (
@@ -67,91 +56,64 @@ const FlashSection = () => {
       transition={{ duration: 0.8 }}
     >
       <div className="mb-6 flex flex-col sm:flex-row items-center justify-between">
-        <div className="flex items-center">
-          <div className="h-10 w-5 bg-red-500 border rounded-md"></div>
-          <h1 className="text-red-500 ml-2 text-2xl sm:text-3xl font-bold">
-            Today's Flash Sales
-          </h1>
-        </div>
+        <h1 className="text-red-500 text-2xl sm:text-3xl font-bold flex items-center">
+          <span className="h-10 w-5 bg-red-500 border rounded-md mr-2"></span>
+          Today's Flash Sales
+        </h1>
         <Link to="/all-products">
-          <button className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300 ease-in-out">
+          <button className="bg-red-500 text-white py-2 px-6 rounded-lg hover:bg-red-600 transition duration-300">
             View All
           </button>
         </Link>
       </div>
-      {notifications && (
-        <div
-          className={`${
-            notificationType === "success"
-              ? "bg-green-500"
-              : notificationType === "error"
-              ? "bg-red-500"
-              : "bg-blue-500"
-          } text-white p-2 rounded-md mb-4 text-center`}
-        >
-          {notifications}
-        </div>
-      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {loading ? (
-          <p>Loading products...</p>
-        ) : products.length > 0 ? (
-          products.slice(0, 4).map((product, index) => (
-            <motion.div
-              key={product.id}
-              className="bg-white p-6 rounded-lg shadow-lg transition duration-300 hover:shadow-2xl hover:scale-105 relative"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-            >
-              <div className="w-14 h-8 bg-red-500 text-white absolute top-2 left-2 rounded-md text-center text-sm flex items-center justify-center font-semibold">
-                -50%
-              </div>
-              <img
-                src={WishlistIcon}
-                alt="Add to Wishlist"
-                className="w-7 h-7 cursor-pointer absolute top-2 right-2 z-10 bg-white p-1 rounded-full shadow-sm hover:bg-gray-200 transition"
-                onClick={() => {
-                  const isInFavorites =
-                    favorites && favorites.some((item) => item.id === product.id);
-                  if (isInFavorites) {
-                    handleRemoveFromFavorites(product);
-                  } else {
-                    handleAddToFavorites(product);
-                  }
-                }}
-              />
-              <motion.img
-                src={product.image}
-                alt={product.title}
-                className="w-full h-48 object-contain rounded-md transition transform hover:scale-110"
-              />
-              <div className="mt-4 text-center">
-                <h3 className="text-lg font-semibold text-gray-800 h-16 overflow-hidden">
-                  {product.title}
-                </h3>
-                <p className="text-xl font-bold text-red-600">${product.price}</p>
-                <div className="rating mt-2 text-yellow-400">
-                  {"★".repeat(Math.floor(product.rating.rate))}
-                  {"☆".repeat(5 - Math.floor(product.rating.rate))}
-                  <span className="ml-2 text-sm text-gray-500">
-                    ({product.rating.rate})
-                  </span>
-                </div>
-              </div>
-              <motion.button
-                className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition hover:scale-105"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleAddToCart(product)}
-              >
-                Add to Cart
-              </motion.button>
-            </motion.div>
-          ))
-        ) : (
-          <p>No products available.</p>
-        )}
+        {loading
+          ? Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white p-6 rounded-lg shadow-lg animate-pulse h-80"
+              ></div>
+            ))
+          : displayedProducts.map((product, index) => {
+              const isInCart = cart.some((item) => item.id === product.id);
+              return (
+                <motion.div
+                  key={product.id}
+                  className="bg-white p-6 rounded-lg shadow-lg transition hover:shadow-2xl hover:scale-105 relative"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                >
+                  <Link to={`/product/${product.id}`}>
+                    <motion.img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-48 object-contain rounded-md transition transform hover:scale-110 cursor-pointer"
+                    />
+                  </Link>
+                  <div className="mt-4 text-center">
+                    <Link to={`/product/${product.id}`}>
+                      <h3 className="text-lg font-semibold text-gray-800 h-16 overflow-hidden cursor-pointer hover:text-red-500">
+                        {product.title}
+                      </h3>
+                    </Link>
+                    <p className="text-xl font-bold text-red-600">${product.price}</p>
+                  </div>
+                  <motion.button
+                    className={`mt-4 w-full py-2 px-4 rounded-lg transition ${
+                      isInCart
+                        ? "bg-gray-500 text-white"
+                        : "bg-black text-white hover:bg-gray-800"
+                    }`}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => handleAddToCart(product)}
+                  >
+                    {isInCart ? "Added to Cart" : "Add to Cart"}
+                  </motion.button>
+                </motion.div>
+              );
+            })}
       </div>
     </motion.section>
   );

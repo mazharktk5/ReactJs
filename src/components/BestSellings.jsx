@@ -1,19 +1,20 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify"; // Import Toast
+import "react-toastify/dist/ReactToastify.css"; // Import Toast CSS
 import { CartContext } from "../components/CartContext";
 import { FavoritesContext } from "../components/FavoratesContext";
+import { useUser } from "../context/UserContext"; // Import user context
 import WishlistIcon from "../assets/images/Wishlist.png";
 
 const BestSellingsSection = () => {
   const { addToCart, cart } = useContext(CartContext);
-  const { favorites, addToFavorites, removeFromFavorites } =
-    useContext(FavoritesContext);
+  const { favorites, addToFavorites, removeFromFavorites } = useContext(FavoritesContext);
+  const { user } = useUser(); // Get user from context
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [notifications, setNotifications] = useState(null);
-  const [notificationType, setNotificationType] = useState(null);
 
   useEffect(() => {
     fetch("https://fakestoreapi.com/products")
@@ -34,35 +35,42 @@ const BestSellingsSection = () => {
   }, []);
 
   const handleAddToCart = (product) => {
+    if (!user) {
+      toast.error("Please sign in or log in first!");
+      return;
+    }
+
     const existingProduct = cart.find((item) => item.id === product.id);
     if (existingProduct) {
-      setNotifications(`${product.title} is already in the cart.`);
-      setNotificationType("info");
+      toast.info(`${product.title} is already in the cart.`);
     } else {
       addToCart(product);
-      setNotifications(`${product.title} added to cart.`);
-      setNotificationType("success");
+      toast.success(`${product.title} added to cart.`);
     }
-    setTimeout(() => setNotifications(null), 3000);
   };
 
   const handleAddToFavorites = (product) => {
+    if (!user) {
+      toast.error("Please sign in or log in first!");
+      return;
+    }
+
     addToFavorites(product);
-    setNotifications(`${product.title} added to wishlist.`);
-    setNotificationType("success");
-    setTimeout(() => setNotifications(null), 3000);
+    toast.success(`${product.title} added to wishlist.`);
   };
 
   const handleRemoveFromFavorites = (product) => {
+    if (!user) {
+      toast.error("Please sign in or log in first!");
+      return;
+    }
+
     removeFromFavorites(product.id);
-    setNotifications(`${product.title} removed from wishlist.`);
-    setNotificationType("error");
-    setTimeout(() => setNotifications(null), 3000);
+    toast.error(`${product.title} removed from wishlist.`);
   };
 
   return (
     <section className="p-10 bg-gray-100">
-     
       <motion.div 
         className="mb-6 flex flex-col sm:flex-row items-center justify-between"
         initial={{ opacity: 0, y: -20 }}
@@ -91,25 +99,6 @@ const BestSellingsSection = () => {
         </Link>
       </motion.div>
 
-      
-      {notifications && (
-        <motion.div
-          className={`${
-            notificationType === "success"
-              ? "bg-green-500"
-              : notificationType === "error"
-              ? "bg-red-500"
-              : "bg-blue-500"
-          } text-white p-2 rounded-md mb-4 text-center`}
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-        >
-          {notifications}
-        </motion.div>
-      )}
-
-      
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {loading ? (
           <p>Loading products...</p>
@@ -124,20 +113,17 @@ const BestSellingsSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              
               <div className="w-14 h-8 bg-red-500 text-white absolute top-2 left-2 rounded-md text-center text-sm flex items-center justify-center font-semibold">
                 -40%
               </div>
 
-             
               <motion.img
                 src={WishlistIcon}
                 alt="Add to Wishlist"
                 className="w-7 h-7 cursor-pointer absolute top-2 right-2 z-10 bg-white p-1 rounded-full shadow-sm hover:bg-gray-200 transition"
                 whileHover={{ scale: 1.2 }}
                 onClick={() => {
-                  const isInFavorites =
-                    favorites && favorites.some((item) => item.id === product.id);
+                  const isInFavorites = favorites.some((item) => item.id === product.id);
                   if (isInFavorites) {
                     handleRemoveFromFavorites(product);
                   } else {
@@ -146,7 +132,6 @@ const BestSellingsSection = () => {
                 }}
               />
 
-              
               <motion.img
                 src={product.image}
                 alt={product.title}
@@ -154,7 +139,6 @@ const BestSellingsSection = () => {
                 whileHover={{ scale: 1.1 }}
               />
 
-              
               <div className="mt-4 text-center">
                 <h3 className="text-lg font-semibold text-gray-800 h-16 overflow-hidden">
                   {product.title}
@@ -169,7 +153,6 @@ const BestSellingsSection = () => {
                 </div>
               </div>
 
-              
               <motion.button
                 className="mt-4 w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition"
                 whileHover={{ scale: 1.05 }}
